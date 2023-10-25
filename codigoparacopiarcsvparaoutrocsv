@@ -1,0 +1,30 @@
+import csv
+import pandas as pd
+import os
+
+# Ler as 4 primeiras linhas do arquivo de origem sem cabeçalho
+data = []
+
+with open('arquivo_origem.csv', 'r') as csvfile:
+    reader = csv.reader(csvfile)
+    for i, row in enumerate(reader):
+        if i >= 4:
+            break
+        data.append(row[:6])
+
+# Converter a lista de dados em um DataFrame
+df_origem = pd.DataFrame(data)
+
+# Verificar se o arquivo de destino existe
+if not os.path.exists('arquivo_destino.csv'):
+    # Se não existir, crie um DataFrame vazio com as mesmas colunas do arquivo de origem
+    df_destino = pd.DataFrame(columns=['Coluna1', 'Coluna2', 'Coluna3', 'Coluna4', 'Coluna5', 'Coluna6'])
+else:
+    # Se existir, leia o arquivo de destino
+    df_destino = pd.read_csv('arquivo_destino.csv')
+
+# Copiar os dados do arquivo de origem para o arquivo de destino
+df_destino = df_destino.append(df_origem, ignore_index=True)
+
+# Salvar o arquivo de destino
+df_destino.to_csv('arquivo_destino.csv', index=False)
